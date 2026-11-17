@@ -4,6 +4,8 @@ services:
     image: python:3.12-alpine
     working_dir: /tests
     command: ["python", "mock_server.py"]
+    environment:
+      FIXTURE_PUBLIC_ORIGIN: ${FIXTURE_PUBLIC_ORIGIN:-http://localhost:18080}
     volumes: [./tests:/tests:ro]
     networks: [backend]
   rust_iss:

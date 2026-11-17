@@ -11,7 +11,7 @@ async function main() {
   if(response.status()!==200)throw new Error(`${url}: ${response.status()}`);
   if(name==='dashboard'){
    await page.locator('#jwstFilter').waitFor();
-   await page.waitForFunction(()=>!document.querySelector('#jwstInfo').textContent.includes('Загрузка'),{timeout:15000});
+   await page.waitForFunction(()=>document.querySelector('#jwstInfo').textContent.includes('Показано'),null,{timeout:15000});
    const captions=page.locator('#jwstTrack figure');
    if(await captions.count()!==1)throw new Error('Gallery fixture did not render');
    if(await page.locator('#astroBody tr').count()<1)throw new Error('Events did not render');

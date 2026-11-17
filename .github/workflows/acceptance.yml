@@ -9,6 +9,7 @@ jobs:
     env:
       COMPOSE_FILE: docker-compose.yml:compose.test.yml
       COMPOSE_PROJECT_NAME: cassiopeia_pr4_ci
+      FIXTURE_PUBLIC_ORIGIN: http://nginx
     steps:
       - uses: actions/checkout@v4
       - name: Private ephemeral configuration

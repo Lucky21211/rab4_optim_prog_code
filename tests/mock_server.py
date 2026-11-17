@@ -47,7 +47,7 @@ class Handler(BaseHTTPRequestHandler):
         if source == 'iss':
             return self.reply({'latitude': 55.75 + counts[source] / 1000, 'longitude': 37.61, 'velocity': 27600, 'altitude': 420, 'timestamp': int(time.time())})
         if source == 'osdr': return self.reply({'OSD-1': {'title': 'Fixture space biology study', 'REST_URL': 'https://visualization.osdr.nasa.gov/biodata/api/v2/dataset/OSD-1/', 'updated_at': '2025-11-01T12:00:00Z'}})
-        if source == 'jwst': return self.reply({'body': [{'observation_id': 'fixture-001', 'program': '2734', 'location': 'http://nginx/fixtures/space.jpg', 'details': {'suffix': '_cal', 'instruments': [{'instrument': 'NIRCam'}]}}]})
+        if source == 'jwst': return self.reply({'body': [{'observation_id': 'fixture-001', 'program': '2734', 'location': os.getenv('FIXTURE_PUBLIC_ORIGIN', 'http://localhost:18080')+'/fixtures/space.jpg', 'details': {'suffix': '_cal', 'instruments': [{'instrument': 'NIRCam'}]}}]})
         if source == 'astro':
             query = parse_qs(parsed.query)
             required = {'from_date', 'to_date', 'time', 'elevation', 'latitude', 'longitude'}
