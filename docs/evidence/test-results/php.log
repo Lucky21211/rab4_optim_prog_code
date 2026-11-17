@@ -1,9 +1,13 @@
- Container cassiopeia_pr4_ci-php_tests-run-4ac547d78e92 Creating 
- Container cassiopeia_pr4_ci-php_tests-run-4ac547d78e92 Created 
+ Container cassiopeia_pr4_ci-php_tests-run-de073dec54ad Creating 
+ Container cassiopeia_pr4_ci-php_tests-run-de073dec54ad Created 
 {"event":"php_ready"}
 
-  !!!!
+   PASS  Tests\Feature\SpaceContractTest
+  ✓ gallery can be replaced through container                            0.09s  
+  ✓ api failure is http 200 with trace                                   0.01s  
+  ✓ invalid inputs never call provider                                   0.01s  
+  ✓ cms html sanitizer preserves markup and removes xss
 
-  Tests:    4 warnings (15 assertions)
-  Duration: 0.11s
+  Tests:    4 passed (15 assertions)
+  Duration: 0.15s
 

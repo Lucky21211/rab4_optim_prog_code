@@ -1,14 +1,14 @@
+ Container cassiopeia_pr4_ci-redis-1 Running 
  Container cassiopeia_pr4_ci-db-1 Running 
  Container cassiopeia_pr4_ci-mock-1 Running 
  Container cassiopeia_pr4_ci-rust_iss-1 Running 
- Container cassiopeia_pr4_ci-redis-1 Running 
  Container cassiopeia_pr4_ci-php-1 Running 
  Container cassiopeia_pr4_ci-nginx-1 Running 
  Container cassiopeia_pr4_ci-db-1 Waiting 
  Container cassiopeia_pr4_ci-db-1 Healthy 
- Container cassiopeia_pr4_ci-db-1 Waiting 
  Container cassiopeia_pr4_ci-redis-1 Waiting 
  Container cassiopeia_pr4_ci-rust_iss-1 Waiting 
+ Container cassiopeia_pr4_ci-db-1 Waiting 
  Container cassiopeia_pr4_ci-db-1 Healthy 
  Container cassiopeia_pr4_ci-redis-1 Healthy 
  Container cassiopeia_pr4_ci-rust_iss-1 Healthy 
@@ -16,8 +16,8 @@
  Container cassiopeia_pr4_ci-php-1 Healthy 
  Container cassiopeia_pr4_ci-php-1 Waiting 
  Container cassiopeia_pr4_ci-php-1 Healthy 
- Container cassiopeia_pr4_ci-tests-run-48c6fb632a86 Creating 
- Container cassiopeia_pr4_ci-tests-run-48c6fb632a86 Created 
+ Container cassiopeia_pr4_ci-tests-run-61dbf27aac68 Creating 
+ Container cassiopeia_pr4_ci-tests-run-61dbf27aac68 Created 
 test_01_collections_and_upsert (test_integration.AcceptanceTests.test_01_collections_and_upsert) ... ok
 test_02_pages_and_web_contracts (test_integration.AcceptanceTests.test_02_pages_and_web_contracts) ... ok
 test_03_errors_validation_and_retries (test_integration.AcceptanceTests.test_03_errors_validation_and_retries) ... ok
@@ -31,6 +31,6 @@ test_csv_contract_and_duplicate_protection (test_legacy.LegacyContractTests.test
 test_names_algorithm_and_ranges (test_legacy.LegacyContractTests.test_names_algorithm_and_ranges) ... ok
 
 ----------------------------------------------------------------------
-Ran 9 tests in 2.419s
+Ran 9 tests in 2.493s
 
 OK
