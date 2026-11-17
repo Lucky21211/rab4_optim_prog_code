@@ -1,0 +1,53 @@
+name: Compose acceptance
+on: [push, workflow_dispatch]
+permissions:
+  contents: read
+jobs:
+  acceptance:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    env:
+      COMPOSE_FILE: docker-compose.yml:compose.test.yml
+      COMPOSE_PROJECT_NAME: cassiopeia_pr4_ci
+    steps:
+      - uses: actions/checkout@v4
+      - name: Private ephemeral configuration
+        run: |
+          cp .env.example .env
+          sed -i "s/^POSTGRES_PASSWORD=$/POSTGRES_PASSWORD=$(openssl rand -hex 24)/" .env
+          sed -i "s|^APP_KEY=$|APP_KEY=base64:$(openssl rand -base64 32)|" .env
+          mkdir -p artifacts/logs artifacts/test-results artifacts/screenshots
+      - name: Validate and build from source
+        run: |
+          docker compose config --quiet
+          docker compose build --pull
+          docker compose --profile test build tests rust_tests php_tests browser
+      - name: Start isolated stack
+        run: docker compose up -d --wait --wait-timeout 180 db redis mock rust_iss php nginx pascal_legacy
+      - name: Rust tests
+        run: docker compose run --rm rust_tests 2>&1 | tee artifacts/test-results/rust.log
+      - name: Laravel contract and security tests
+        run: docker compose run --rm php_tests 2>&1 | tee artifacts/test-results/php.log
+      - name: Integration and legacy contracts
+        run: docker compose run --rm tests 2>&1 | tee artifacts/test-results/integration.log
+      - name: Browser and interface screenshots
+        run: docker compose run --rm browser 2>&1 | tee artifacts/test-results/browser.log
+      - name: Persistence across container recreation
+        run: |
+          before=$(docker compose exec -T db sh -c 'psql -U "$POSTGRES_USER" -d "$POSTGRES_DB" -Atc "SELECT count(*) FROM iss_fetch_log"')
+          docker compose down
+          docker compose up -d --wait --wait-timeout 180 db redis mock rust_iss php nginx pascal_legacy
+          after=$(docker compose exec -T db sh -c 'psql -U "$POSTGRES_USER" -d "$POSTGRES_DB" -Atc "SELECT count(*) FROM iss_fetch_log"')
+          test "$before" = "$after"
+          echo "ISS persisted rows: $after" | tee artifacts/test-results/persistence.log
+      - name: Collect logs
+        if: always()
+        run: docker compose logs --no-color > artifacts/logs/compose.log
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: acceptance-evidence
+          path: artifacts/
+      - name: Cleanup
+        if: always()
+        run: docker compose down -v
