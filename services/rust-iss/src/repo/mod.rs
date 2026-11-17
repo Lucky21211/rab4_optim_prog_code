@@ -53,7 +53,7 @@ impl OsdrRepo<'_> {
             ) else {
                 continue;
             };
-            let title = osdr::pick(&item, &["title", "name", "label"]);
+            let title = osdr::title(&item);
             let status = osdr::pick(&item, &["status", "state", "lifecycle"]);
             let updated = [
                 "updated",

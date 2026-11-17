@@ -1,0 +1,18 @@
+flowchart TB
+  browser[Браузер Dashboard ISS OSDR CMS] --> nginx[Nginx]
+  nginx --> controllers[Laravel Controllers]
+  controllers --> services[Services and ViewModels]
+  services --> ports[SpaceDataSource GalleryProvider EventProvider]
+  ports --> cache[Cache Aside decorator and single flight]
+  cache <--> redis[(Redis TTL)]
+  cache --> rust[Axum handlers and AppState]
+  rust --> collectors[Collection and telemetry services]
+  collectors --> clients[ISS OSDR JWST Astronomy clients]
+  clients --> upstream[External APIs]
+  collectors --> repos[IssRepo OsdrRepo CacheRepo]
+  repos --> db[(PostgreSQL)]
+  services --> cms[CmsRepository and HtmlSanitizer]
+  cms --> db
+  cron[Cron UTC] --> cli[Python LegacyCSV CLI]
+  cli --> csv[CSV volume]
+  cli --> db

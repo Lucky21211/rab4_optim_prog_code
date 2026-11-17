@@ -43,6 +43,15 @@ pub fn timestamp(v: &Value) -> Option<DateTime<Utc>> {
             .map(|t| Utc.from_utc_datetime(&t))
     })
 }
+pub fn title(v: &Value) -> Option<String> {
+    pick(v, &["title", "name", "label"]).or_else(|| {
+        let url = reqwest::Url::parse(&pick(v, &["REST_URL", "rest_url", "rest"])?).ok()?;
+        url.path_segments()?
+            .filter(|part| !part.is_empty())
+            .next_back()
+            .map(str::to_string)
+    })
+}
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -55,5 +64,16 @@ mod tests {
     #[test]
     fn invalid_date_is_not_now() {
         assert!(timestamp(&json!(i64::MAX)).is_none());
+    }
+    #[test]
+    fn listing_title_fallback_is_preserved() {
+        assert_eq!(
+            title(&json!({"REST_URL":"https://example.org/dataset/OSD-48/"})),
+            Some("OSD-48".into())
+        );
+        assert_eq!(
+            title(&json!({"title":"Study","REST_URL":"https://example.org/OSD-48/"})),
+            Some("Study".into())
+        );
     }
 }

@@ -1,0 +1,14 @@
+flowchart TD
+  request[GET request] --> validation{Valid parameters}
+  validation -- no --> error[HTTP 200 ok false trace_id]
+  validation -- yes --> lookup{Redis key exists}
+  lookup -- yes --> hit[Return cached successful JSON]
+  lookup -- no --> lock[Acquire per key lock]
+  lock --> recheck{Check key again}
+  recheck -- hit --> hit
+  recheck -- miss --> adapter[Read source through adapter]
+  adapter --> success{Successful response}
+  success -- yes --> store[Store JSON with TTL]
+  store --> release[Release lock and return]
+  success -- no --> skip[Release lock without caching error]
+  skip --> error
