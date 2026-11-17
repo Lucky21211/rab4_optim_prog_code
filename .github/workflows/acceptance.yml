@@ -1,5 +1,12 @@
 name: Compose acceptance
-on: [push, workflow_dispatch]
+on:
+  push:
+    paths-ignore:
+      - 'docs/**'
+      - 'tools/build_report.py'
+      - 'tools/render_docx.py'
+      - '.github/workflows/report.yml'
+  workflow_dispatch:
 permissions:
   contents: read
 jobs:

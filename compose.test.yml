@@ -70,7 +70,7 @@ services:
       APP_KEY: ${APP_KEY:?Set APP_KEY}
       CACHE_STORE: array
       SESSION_DRIVER: array
-    command: ["php", "artisan", "test", "--compact"]
+    command: ["php", "artisan", "test", "--display-warnings", "--display-phpunit-deprecations"]
   browser:
     profiles: [test]
     build:

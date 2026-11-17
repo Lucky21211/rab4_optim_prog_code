@@ -1,0 +1,26 @@
+name: Report visual preview
+on:
+  push:
+    paths:
+      - 'docs/*.docx'
+      - '.github/workflows/report.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  render:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - name: Rendering dependencies
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq libreoffice-writer poppler-utils fonts-liberation
+          python -m pip install python-docx Pillow pdf2image
+      - name: Render the final Word document
+        run: python tools/render_docx.py docs/Отчет_практическая_работа_4.docx --output_dir artifacts/report-preview --emit_pdf
+      - uses: actions/upload-artifact@v4
+        with:
+          name: report-preview
+          path: artifacts/report-preview/
