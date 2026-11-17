@@ -16,6 +16,9 @@ async function main() {
    if(await captions.count()!==1)throw new Error('Gallery fixture did not render');
    if(await page.locator('#astroBody tr').count()<1)throw new Error('Events did not render');
   }
+  const bodyBounds=await page.locator('body').boundingBox();
+  await page.setViewportSize({width:1440,height:Math.max(300,Math.ceil(bodyBounds.height)+24)});
+  await page.waitForTimeout(200);
   await page.screenshot({path:`${dir}/${name}.png`,fullPage:true});
  }
  await browser.close();

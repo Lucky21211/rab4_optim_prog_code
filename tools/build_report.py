@@ -35,8 +35,9 @@ def diagrams():
     font = ImageFont.truetype(font_path, 25)
     def image(name, boxes, arrows, size=(1600,800)):
         im=Image.new('RGB',size,'white'); d=ImageDraw.Draw(im)
-        for a,b in arrows:
-            d.line([a,b],fill='#555555',width=4)
+        for points in arrows:
+            a,b=points[-2:]
+            d.line(points,fill='#555555',width=4)
             x,y=b; dx,dy=x-a[0],y-a[1]
             if abs(dx)>=abs(dy): d.polygon([(x,y),(x-(12 if dx>0 else -12),y-7),(x-(12 if dx>0 else -12),y+7)],fill='#555555')
             else: d.polygon([(x,y),(x-7,y-(12 if dy>0 else -12)),(x+7,y-(12 if dy>0 else -12))],fill='#555555')
@@ -49,13 +50,13 @@ def diagrams():
       ((650,300,980,450),'Blade\nSQL и сырой HTML'),((1130,60,1540,190),'Внешние API\nJWST и Astronomy'),
       ((650,580,980,730),'Rust main.rs\nHTTP и SQL'),((1130,580,1540,730),'PostgreSQL\nЛоги и данные'),
       ((30,580,400,730),'Pascal\nCSV и psql'),((1130,300,1540,450),'NASA и ISS API')
-    ],[((270,125),(340,125)),((580,125),(650,125)),((980,125),(1130,125)),((815,190),(815,300)),((980,375),(1330,580)),((815,450),(815,580)),((980,655),(1130,655)),((400,655),(650,655)),((1335,450),(980,580))])
+    ],[((270,125),(340,125)),((580,125),(650,125)),((980,125),(1130,125)),((815,190),(815,300)),((980,375),(1330,580)),((815,450),(815,580)),((980,655),(1130,655)),((215,730),(215,770),(1335,770),(1335,730)),((1335,450),(980,580))])
     image('after.png',[
       ((30,40,270,160),'Браузер'),((340,40,580,160),'Nginx'),((650,40,980,160),'Laravel\nТонкие контроллеры'),
       ((650,250,980,400),'Сервисы и порты\nGallery и Events'),((1130,250,1540,400),'Redis\nTTL и single flight'),
       ((650,510,980,660),'Rust AppState\nСлои и repo'),((1130,510,1540,660),'Внешние API\nЕдиный HTTP клиент'),
       ((650,770,980,900),'PostgreSQL\nМиграции и upsert'),((30,770,400,900),'Python LegacyCSV\nCron и COPY')
-    ],[((270,100),(340,100)),((580,100),(650,100)),((815,160),(815,250)),((980,325),(1130,325)),((815,400),(815,510)),((980,585),(1130,585)),((815,660),(815,770)),((400,835),(650,835))],(1600,950))
+    ],[((270,100),(340,100)),((580,100),(650,100)),((815,160),(815,250)),((980,325),(1130,325)),((815,400),(815,510)),((980,585),(1130,585)),((815,660),(815,770)),((400,835),(650,835)),((650,325),(530,325),(530,835),(650,835))],(1600,950))
     image('cache-flow.png',[
       ((30,80,320,240),'Запрос и\nвалидация'),((420,80,780,240),'Поиск ключа\nв Redis'),((1040,80,1510,240),'HIT\nВозврат ответа'),
       ((420,400,780,560),'MISS\nLock ключа'),((1040,400,1510,560),'Чтение источника\nУспех → кэш с TTL'),
@@ -79,6 +80,10 @@ def main():
         doc.styles[name].font.name='Times New Roman'; doc.styles[name].font.size=Pt(size);doc.styles[name].font.color.rgb=RGBColor(0,0,0)
     doc.styles['Caption'].font.name='Times New Roman'; doc.styles['Caption'].font.size=Pt(10)
     doc.styles['Caption'].font.color.rgb=RGBColor(0,0,0)
+    for border in list(doc.styles.element.xpath('.//w:pBdr')): border.getparent().remove(border)
+    for fonts in doc.styles.element.xpath('.//w:rFonts'):
+        for attr in ['asciiTheme','hAnsiTheme','eastAsiaTheme','cstheme']:
+            fonts.attrib.pop(qn('w:'+attr), None)
     sec.different_first_page_header_footer=True
     footer=sec.footer.paragraphs[0];footer.alignment=WD_ALIGN_PARAGRAPH.CENTER
     fld=OxmlElement('w:fldSimple');fld.set(qn('w:instr'),'PAGE');footer._p.append(fld)
@@ -90,7 +95,7 @@ def main():
     def code(text):
         for line in [part for raw in text.strip().splitlines() for part in (textwrap.wrap(raw, width=92, replace_whitespace=False, drop_whitespace=False) or [''])]:
             para=doc.add_paragraph();para.paragraph_format.space_after=Pt(0);para.paragraph_format.line_spacing=1
-            run=para.add_run(line);run.font.name='Consolas';run.font.size=Pt(9)
+            run=para.add_run(line);run.font.name='Courier New';run.font.size=Pt(8.5)
         p()
     def figure(file,caption,width=16.5,max_height=19):
         with Image.open(file) as im: w,h=im.size
@@ -182,9 +187,9 @@ def main():
     p('План перехода: зафиксировать CSV-контракт; сравнить генерацию в режиме --csv-only; применить уникальный индекс; проверить повторный импорт; остановить старый цикл; включить только новый cron и проверить одну запись. При откате сохранить CSV и данные, отключив новый scheduler. Подробный контракт и команды находятся в docs/LEGACY_CONTRACT.md.')
     page();title('8 Таблица изменений и эффект')
     p('Каждая ячейка столбца «Эффект» содержит ровно 120 символов, включая пробелы и знаки препинания; длины проверяются программно при сборке отчёта.')
-    table(['Модуль','Проблема','Решение','Паттерн','Эффект'],EFFECTS[:4],[1.3,2.6,3.0,2.6,7.0])
+    table(['Модуль','Проблема','Решение','Паттерн','Эффект'],EFFECTS[:4],[1.9,2.4,2.7,2.9,6.6])
     page();title('8 Таблица изменений и эффект продолжение')
-    table(['Модуль','Проблема','Решение','Паттерн','Эффект'],EFFECTS[4:],[1.3,2.6,3.0,2.6,7.0])
+    table(['Модуль','Проблема','Решение','Паттерн','Эффект'],EFFECTS[4:],[1.9,2.4,2.7,2.9,6.6])
     p('Эффект отделён от абсолютного времени ответа: сокращение числа запросов проверяется счётчиком mock и SQL-структурой; универсальный процент ускорения без одинакового стенда и данных не приводится.')
     page();title('9 Результаты проверки')
     p('Проверки выполнены через Docker Compose в изолированном стенде GitHub Actions. Использованы PostgreSQL, Redis, реальный Rust и Laravel, Python CLI и mock внешних провайдеров. Fixture-изображения и события демонстрируют интерфейс и контракты, а не реальные наблюдения NASA.')

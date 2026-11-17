@@ -19,7 +19,13 @@
 
 Нужен работающий Docker Desktop с Linux containers/WSL 2 и Docker Compose 2.24.4 или новее.
 В папке rabota4 уже создан приватный .env с локальными APP_KEY и паролем БД; они не публикуются.
-После клонирования с GitHub скопируйте .env.example в .env, задайте случайные POSTGRES_PASSWORD и APP_KEY вида base64: плюс 32 случайных байта в base64. Пароль БД для DATABASE_URL должен состоять из URL-safe символов, например hex.
+После клонирования с GitHub создайте приватный .env через Compose; уже существующий файл команда не перезаписывает:
+
+```bash
+docker compose -f compose.setup.yml run --rm init
+```
+
+Команда генерирует случайный URL-safe пароль БД и APP_KEY; значения не выводятся в журнал.
 
 ```bash
 docker compose config --quiet
@@ -59,4 +65,4 @@ docker compose -f docker-compose.yml -f compose.test.yml -p cassiopeia_pr4_test 
 - [LegacyCSV и план миграции](docs/LEGACY_CONTRACT.md)
 - [Источники и ссылки задания](docs/UPSTREAM.md)
 
-Отчёт Word и результаты проверки добавляются в docs после завершения прогона.
+Готовый [отчёт Word](docs/Отчет_практическая_работа_4.docx), диаграммы и фактические подтверждения находятся в docs. Снимки и журналы сохранены в docs/evidence; генератор отчёта — tools/build_report.py.

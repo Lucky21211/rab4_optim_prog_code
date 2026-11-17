@@ -3,6 +3,26 @@ use crate::{
     services::AppState,
 };
 use serde_json::{json, Value};
+fn image_url(value: &Value) -> Option<&str> {
+    let mut stack = vec![value];
+    while let Some(node) = stack.pop() {
+        match node {
+            Value::String(url) if http_url(url) => {
+                let clean = url.split('?').next().unwrap_or("").to_lowercase();
+                if [".jpg", ".jpeg", ".png"]
+                    .iter()
+                    .any(|ext| clean.ends_with(ext))
+                {
+                    return Some(url);
+                }
+            }
+            Value::Array(items) => stack.extend(items.iter().rev()),
+            Value::Object(items) => stack.extend(items.values()),
+            _ => {}
+        }
+    }
+    None
+}
 pub async fn feed(st: &AppState, q: GalleryQuery) -> Result<Value, ApiError> {
     let page = q.page.unwrap_or(1);
     let per = q.per_page.unwrap_or(24);
@@ -74,7 +94,9 @@ pub async fn feed(st: &AppState, q: GalleryQuery) -> Result<Value, ApiError> {
                     [".jpg", ".jpeg", ".png"].iter().any(|x| clean.ends_with(x))
                 }
             });
-        let Some(url) = url else { continue };
+        let Some(url) = url.or_else(|| image_url(it)) else {
+            continue;
+        };
         let inst: Vec<_> = it
             .pointer("/details/instruments")
             .and_then(Value::as_array)
@@ -110,4 +132,19 @@ pub async fn feed(st: &AppState, q: GalleryQuery) -> Result<Value, ApiError> {
         }
     }
     Ok(json!({"source":path,"count":items.len(),"items":items}))
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    #[test]
+    fn nested_images_remain_supported() {
+        let value =
+            json!({"details":{"files":[{"url":"https://example.org/space.png?size=small"}]}});
+        assert_eq!(
+            image_url(&value),
+            Some("https://example.org/space.png?size=small")
+        );
+        assert_eq!(image_url(&json!({"url":"javascript:alert(1)"})), None);
+    }
 }
