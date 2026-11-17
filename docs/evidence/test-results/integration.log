@@ -1,0 +1,36 @@
+ Container cassiopeia_pr4_ci-db-1 Running 
+ Container cassiopeia_pr4_ci-mock-1 Running 
+ Container cassiopeia_pr4_ci-rust_iss-1 Running 
+ Container cassiopeia_pr4_ci-redis-1 Running 
+ Container cassiopeia_pr4_ci-php-1 Running 
+ Container cassiopeia_pr4_ci-nginx-1 Running 
+ Container cassiopeia_pr4_ci-db-1 Waiting 
+ Container cassiopeia_pr4_ci-db-1 Healthy 
+ Container cassiopeia_pr4_ci-db-1 Waiting 
+ Container cassiopeia_pr4_ci-redis-1 Waiting 
+ Container cassiopeia_pr4_ci-rust_iss-1 Waiting 
+ Container cassiopeia_pr4_ci-db-1 Healthy 
+ Container cassiopeia_pr4_ci-redis-1 Healthy 
+ Container cassiopeia_pr4_ci-rust_iss-1 Healthy 
+ Container cassiopeia_pr4_ci-php-1 Waiting 
+ Container cassiopeia_pr4_ci-php-1 Healthy 
+ Container cassiopeia_pr4_ci-php-1 Waiting 
+ Container cassiopeia_pr4_ci-php-1 Healthy 
+ Container cassiopeia_pr4_ci-tests-run-48c6fb632a86 Creating 
+ Container cassiopeia_pr4_ci-tests-run-48c6fb632a86 Created 
+test_01_collections_and_upsert (test_integration.AcceptanceTests.test_01_collections_and_upsert) ... ok
+test_02_pages_and_web_contracts (test_integration.AcceptanceTests.test_02_pages_and_web_contracts) ... ok
+test_03_errors_validation_and_retries (test_integration.AcceptanceTests.test_03_errors_validation_and_retries) ... ok
+test_04_cache_prevents_duplicate_external_calls (test_integration.AcceptanceTests.test_04_cache_prevents_duplicate_external_calls) ... ok
+test_05_job_lock_prevents_overlap (test_integration.AcceptanceTests.test_05_job_lock_prevents_overlap) ... ok
+test_06_database_types_bounded_cache_and_legacy (test_integration.AcceptanceTests.test_06_database_types_bounded_cache_and_legacy) ... {"event": "legacy_imported", "file": "telemetry_20260101_000000.csv", "rows": 1}
+{"event": "legacy_imported", "file": "telemetry_20260101_000000.csv", "rows": 0}
+ok
+test_07_csrf_upload_is_not_exempted (test_integration.AcceptanceTests.test_07_csrf_upload_is_not_exempted) ... ok
+test_csv_contract_and_duplicate_protection (test_legacy.LegacyContractTests.test_csv_contract_and_duplicate_protection) ... ok
+test_names_algorithm_and_ranges (test_legacy.LegacyContractTests.test_names_algorithm_and_ranges) ... ok
+
+----------------------------------------------------------------------
+Ran 9 tests in 2.419s
+
+OK

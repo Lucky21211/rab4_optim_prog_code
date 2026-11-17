@@ -1,0 +1,9 @@
+ Container cassiopeia_pr4_ci-php_tests-run-4ac547d78e92 Creating 
+ Container cassiopeia_pr4_ci-php_tests-run-4ac547d78e92 Created 
+{"event":"php_ready"}
+
+  !!!!
+
+  Tests:    4 warnings (15 assertions)
+  Duration: 0.11s
+

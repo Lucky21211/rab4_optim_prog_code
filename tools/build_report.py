@@ -14,6 +14,7 @@ from docx.oxml.ns import qn
 ROOT = Path(__file__).resolve().parents[1]
 DOCS = ROOT / 'docs'
 EVIDENCE = ROOT / 'artifacts'
+if not (EVIDENCE / 'test-results/run.json').exists(): EVIDENCE = DOCS / 'evidence'
 ASSETS = DOCS / 'diagrams'
 ASSETS.mkdir(parents=True, exist_ok=True)
 
